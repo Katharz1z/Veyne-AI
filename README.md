@@ -2,7 +2,7 @@
 
 **Narrative platform where the LLM is the actor, not the whole system.**
 
-🌐 [Veyne AI site](https://katharz1z.github.io/Veyne-AI/) · 📬 [hello@veyne.ai](mailto:hello@veyne.ai)
+🌐 [Veyne AI site](https://katharz1z.github.io/Veyne-AI/) · 📬 [veyne.ai@gmail.com](mailto:veyne.ai@gmail.com)
 
 ---
 
@@ -202,13 +202,13 @@ For stable production inference we need dedicated GPU cloud. GPU funding buys st
 - **~$400–600/month** — RunPod for Rocinante X 12B (stable inference for MVP testing and the future free tier)
 - **~$600–1000/month** — 20–25B model for Low Premium tier (better prose quality and future image generation)
 
-If you're interested in sponsoring or investing, or just want to follow along — write to [hello@veyne.ai](mailto:hello@veyne.ai).
+If you're interested in sponsoring or investing, or just want to follow along — write to [veyne.ai@gmail.com](mailto:veyne.ai@gmail.com).
 
 ---
 
 ## Contact
 
-**Email:** [hello@veyne.ai](mailto:hello@veyne.ai)  
+**Email:** [veyne.ai@gmail.com](mailto:veyne.ai@gmail.com)  
 **Site:** [katharz1z.github.io/Veyne-AI](https://katharz1z.github.io/Veyne-AI/)  
 **Discord:** coming soon
 
