@@ -8,11 +8,11 @@
 
 ## What this is
 
-Veyne AI is an AI-powered interactive narrative platform. On the surface it looks like a character chat. Under the hood it works like a hybrid of a visual novel, a text RPG, a dating sim, and a story engine — with persistent memory, relationship state, structured story arcs, world pressure, and progression gates.
+Veyne AI is an AI-powered interactive narrative platform. On the surface it looks like a character chat. Under the hood it works like a hybrid of a visual novel, a text RPG, a dating sim, and a story engine — with persistent memory, relationship state, structured story arcs, world pressure, progression gates, and playable consequences.
 
 Most character AI services degrade into one of three patterns: a helpful assistant wearing a costume, endless flirt with no structure, or beautiful prose that forgets everything after ten turns. Veyne is built to solve all three at the architecture level.
 
-**The core principle:** the LLM generates the visible character prose. The surrounding runtime manages state, memory, relationship metrics, story progression, world constraints, scene drivers, and canon boundaries.
+**The core principle:** the LLM writes the visible character prose. The surrounding runtime carries the story: state, memory, relationship metrics, progression, world constraints, scene drivers, source truth, and guardrails.
 
 ```text
 Player message
@@ -30,60 +30,33 @@ State, memory, relationship, story update
 Reducer → New State
 ```
 
-The player sees only the character's response. The rest is invisible.
+The player sees the character response. The product remembers the rest.
 
 ---
 
-## What makes this different
+## What is already updated and ready to inspect
 
-| Typical character chat | Veyne AI |
-|---|---|
-| LLM is the whole system | LLM is one stage inside a narrative runtime |
-| Character agrees with everything | Character has goals, resistance, limits, and pressure |
-| "Trust" is a single number that grows fast | Six separate relationship metrics with progression gates |
-| Forgets previous sessions | Persistent multi-layer memory and session resume |
-| Prompt rules enforce style | Source bibles, authored playbooks, TurnPlans, and guards enforce narrative |
-| One giant prompt | Context Pack Builder selects only what matters for the current turn |
+**Public WIP checkpoint:** `r1.40` — Rocinante live runtime path + positive public surface refresh  
+**Product stage:** active development, sponsor/collaborator-ready WIP, not an open public release yet
 
----
+Ready today:
 
-## Current state
+- **Web product shell** — landing, character catalog/profile, auth shell, saved sessions, resume surface, chat UI.
+- **Session model** — Supabase-backed UUID sessions, persisted transcript, runtime events, state snapshots, local fallback for prototype work.
+- **Runtime bridge** — Next runtime route talks to a Python FastAPI adapter instead of baking behavior directly into React.
+- **Package-backed execution** — runtime packages for `lira-dreyvor` and `adeline-veir` can be loaded behind the adapter.
+- **Rocinante live path** — Rocinante-X 12B is connected through an OpenAI-compatible vLLM / Colab route.
+- **Live turn delivery** — generated LLM responses can reach the web UI and persistence layer.
+- **Guard / repair layer** — visible output is checked for Russian language, dead-end hidden-lore questions, unsupported inventions, and missing playable affordance.
+- **Source architecture** — Founder Vision, Project Vision, World/Character/Arc Bibles, Context Pack rules, State Schema, TurnPlan patterns, and testing docs are consolidated into an active source set.
 
-**WIP checkpoint:** `r1.40` — Rocinante live runtime audit handoff  
-**Status:** Active development, not yet publicly playable
-
-What exists today:
-
-- Web surface: landing, character catalog/profile, auth shell, saved sessions, resume, chat UI
-- Supabase-backed session persistence with local fallback for prototype work
-- Python FastAPI runtime adapter behind the web chat
-- Runtime package loader for `lira-dreyvor` and `adeline-veir`
-- Context pack / source-fragment path feeding the character model
-- Rocinante-X 12B connected through an OpenAI-compatible vLLM / Colab path
-- Live LLM turns reaching the UI and being persisted
-- Visible response guard / repair layer for language, dead-end questions, and playable affordances
-
-What is in progress:
-
-- Auditing the Beat 2/3 live path after the sign reaction
-- Tightening the alignment between visible prose, committed state, and playable next move
-- Mapping responsibility across runtime package state, TurnPlan, context pack rendering, source fragments, reducer, and visible guard
-- Building minimal regressions before the next runtime patch
-
-What is not public yet:
-
-- No open playable build
-- No image generation or TTS
-- No finished creator marketplace
-- No NSFW layer
-
-The current proof target is simple and brutal: one saved story should continue for 10–30 turns without collapsing into a transcript dump, interrogation loop, romance leak, language drift, unsupported world invention, or state/prose mismatch.
+This is no longer just a concept page or CLI toy. The core product loop now has a web surface, a runtime boundary, persistence, package loading, and a live character-model seam.
 
 ---
 
 ## Latest runtime signal
 
-The current live stack has crossed the important "is the LLM seam alive?" line.
+The current live stack has crossed the important integration line:
 
 ```text
 Web chat UI
@@ -110,16 +83,22 @@ model: rocinante-x-12b
 messageFormat: single_user
 ```
 
-That is good. It is also not victory champagne time. The live response is more vivid, but Beat 2/3 still exposes the real product problem: good prose is useless if it commits state the visible scene did not clearly earn.
+That means the main seam is alive: the web app can route a turn to the Python adapter, call the RP model path, receive generated prose, and persist the result.
 
-Known current failures:
+The next engineering pass is about **runtime control quality**: making sure beautiful prose also completes the correct scene move, aligns with committed state, and leaves the player with a playable next action. In less polite terms: not letting the model paint a gorgeous mural while quietly kicking the state machine in the teeth.
 
-- Sign reaction can over-expand into spectacle.
-- Rocinante can invent unsupported physical details.
-- Visible prose may not clearly perform the same status decision the state commits.
-- Beat 3 can close in state while the playable scene still feels unresolved.
+---
 
-The next work is not another landing page polish pass. It is runtime control: the scene must stay beautiful **and** playable. Annoying, yes. Necessary, also yes.
+## What makes this different
+
+| Typical character chat | Veyne AI |
+|---|---|
+| LLM is the whole system | LLM is one stage inside a narrative runtime |
+| Character agrees with everything | Character has goals, resistance, limits, and pressure |
+| "Trust" is one number that grows fast | Six relationship metrics with progression gates |
+| Forgets previous sessions | Persistent session state, memory, resume, and runtime events |
+| Prompt rules enforce style | Source bibles, authored playbooks, TurnPlans, and guards enforce narrative |
+| One giant prompt | Context Pack Builder selects what matters for the current turn |
 
 ---
 
@@ -235,41 +214,42 @@ That is the product thesis in miniature: visible prose plus invisible state, mem
 ## Roadmap
 
 ```text
-✅  CLI runtime foundation
-    State, reducer, relationship engine, context pack builder, Act 1 playbook.
+✅ CLI runtime foundation
+   State, reducer, relationship engine, context pack builder, Act 1 playbook.
 
-✅  Web surface skeleton
-    Character pages, auth shell, sessions, chat, persistence, resume.
+✅ Web surface skeleton
+   Character pages, auth shell, sessions, chat, persistence, resume.
 
-✅  Python runtime bridge
-    FastAPI adapter, package-backed execution, Rocinante-compatible LLM seam.
+✅ Python runtime bridge
+   FastAPI adapter, package-backed execution, Rocinante-compatible LLM seam.
 
-🔄  Live runtime control
-    r1.40 audit: Beat 2/3 sign reaction, state/prose alignment, playable next move.
+✅ Public WIP surface refresh
+   README and GitHub Pages now describe what is built and ready to inspect.
 
-⬜  MVP continuity proof
-    One saved Act 1 story, 10–30 turns, no collapse.
+🔄 Live runtime control
+   Beat 2/3 scene-move alignment, state/prose sync, playable next action.
 
-⬜  v0.9 — limited public access
-    Text only, no images/TTS, early testers.
+⬜ MVP continuity proof
+   One saved Act 1 story, 10–30 turns, no collapse.
 
-⬜  v1.0 — service foundation
-    Free tier + low premium, catalog expansion begins.
+⬜ v0.9 — limited public access
+   Text only, no images/TTS, early testers.
 
-⬜  v2.0 — platform expansion
-    70B models, creator tools, branching Act 2, TTS.
+⬜ v1.0 — service foundation
+   Free tier + low premium, catalog expansion begins.
+
+⬜ v2.0 — platform expansion
+   70B models, creator tools, branching Act 2, TTS.
 ```
 
 ---
 
-## GPU infrastructure
+## What funding unlocks
 
-The project runs without external funding. Development happens on personal resources and temporary Colab tunnels.
+The project currently runs on personal resources and temporary Colab tunnels. Stable inference needs dedicated GPU cloud. GPU funding buys stable long-run sessions, not prettier landing pages.
 
-For stable production inference we need dedicated GPU cloud. GPU funding buys stable long-run sessions, not prettier landing pages.
-
-- **~$400–600/month** — RunPod or equivalent for Rocinante-X 12B, stable inference for MVP testing and the future free tier
-- **~$600–1000/month** — 20–25B model for Low Premium tier, better prose quality and future image generation experiments
+- **~$400–600/month** — RunPod or equivalent for Rocinante-X 12B, stable inference for MVP testing and the future free tier.
+- **~$600–1000/month** — 20–25B model for Low Premium tier, better prose quality and future image generation experiments.
 
 If you're interested in sponsoring or investing, or just want to follow along — write to [veyne.ai@gmail.com](mailto:veyne.ai@gmail.com).
 
